@@ -1,3 +1,17 @@
+module DE9IM
+
+export DE9IMPredicate, 
+    Intersects, 
+    Disjoint, 
+    Contains,
+    Within,
+    Covers,
+    CoveredBy,
+    Touches,
+    Crosses,
+    Overlaps,
+    Equals
+
 """
     DE9IMPredicate{T} <: Any
 
@@ -165,3 +179,5 @@ struct Equals{T} <: DE9IMPredicate{T}
     val::T
 end
 Equals() = Equals(nothing)
+
+end
