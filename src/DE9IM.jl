@@ -19,8 +19,30 @@ Abstract type for all DE9IM predicates objects.
 """
 abstract type DE9IMPredicate{T} end
 
+# Allows passing keyword arguments into a predicate,
+# for interpretation later in the context they are used in.
+struct ArgWithKeywords{T,KW} 
+    val::T 
+    keywords::KW
+end
+
+keywords(::DE9IMPredicate) = NamedTuple()
+keywords(p::DE9IMPredicate{<:ArgWithKeywords}) = keywords(p.val)
+keywords(p::ArgWithKeywords) = p.keywords
+
 Base.parent(p::DE9IMPredicate) = p.val
-Base.eltype(p::DE9IMPredicate{T}) where T = T
+Base.parent(p::DE9IMPredicate{<:ArgWithKeywords}) = parent(p.val)
+Base.parent(p::ArgWithKeywords) = p.val
+
+Base.eltype(::DE9IMPredicate{T}) where T = T
+Base.eltype(::ArgWithKeywords{T}) where T = T
+Base.eltype(::DE9IMPredicate{<:ArgWithKeywords{T}}) where T = T
+
+(::Type{T})(; kw...) where {T<:DE9IMPredicate} = T(_maybe_wrap(nothing, values(kw)))
+(::Type{T})(x; kw...) where {T<:DE9IMPredicate} = T(_maybe_wrap(x, values(kw)))
+
+_maybe_wrap(a, ::NamedTuple{(),Tuple{}}) = a
+_maybe_wrap(a, kw::NamedTuple) = ArgWithKeywords(a, kw)
 
 """
     Intersects{T} <: DE9IMPredicate{T}
@@ -54,7 +76,6 @@ If `Disjoint` wraps an object passed to a predicate function, it must be the sec
 struct Disjoint{T} <: DE9IMPredicate{T}
     val::T
 end
-Disjoint() = Disjoint(nothing)
 
 """
     Contains{T} <: DE9IMPredicate{T}
@@ -71,7 +92,6 @@ If `Contains` wraps an object passed to a predicate function, it must be the sec
 struct Contains{T} <: DE9IMPredicate{T}
     val::T
 end
-Contains() = Contains(nothing)
 
 """
     Within{T} <: DE9IMPredicate{T}
@@ -88,7 +108,6 @@ If `Within` wraps an object passed to a predicate function, it must be the secon
 struct Within{T} <: DE9IMPredicate{T}
     val::T
 end
-Within() = Within(nothing)
 
 """
     Covers{T} <: DE9IMPredicate{T}
@@ -105,7 +124,6 @@ If `Covers` wraps an object passed to a predicate function, it must be the secon
 struct Covers{T} <: DE9IMPredicate{T}
     val::T
 end
-Covers() = Covers(nothing)
 
 """
     CoveredBy{T} <: DE9IMPredicate{T}
@@ -122,7 +140,6 @@ If `CoveredBy` wraps an object passed to a predicate function, it must be the se
 struct CoveredBy{T} <: DE9IMPredicate{T}
     val::T
 end
-CoveredBy() = CoveredBy(nothing)
 
 """
     Touches{T} <: DE9IMPredicate{T}
@@ -137,7 +154,6 @@ A `Touches` predicate returns true if the two geometries have at least one point
 struct Touches{T} <: DE9IMPredicate{T}
     val::T
 end
-Touches() = Touches(nothing)
 
 """
     Crosses{T} <: DE9IMPredicate{T}
@@ -152,7 +168,6 @@ A `Crosses` predicate returns true if the two geometries have some but not all i
 struct Crosses{T} <: DE9IMPredicate{T}
     val::T
 end
-Crosses() = Crosses(nothing)
 
 """
     Overlaps{T} <: DE9IMPredicate{T}
@@ -165,7 +180,6 @@ An `Overlaps` predicate returns true if the two geometries have some interior po
 struct Overlaps{T} <: DE9IMPredicate{T}
     val::T
 end
-Overlaps() = Overlaps(nothing)
 
 """
     Equals{T} <: DE9IMPredicate{T}
@@ -178,6 +192,5 @@ An `Equals` predicate returns true if the two geometries have the same boundary 
 struct Equals{T} <: DE9IMPredicate{T}
     val::T
 end
-Equals() = Equals(nothing)
 
 end
