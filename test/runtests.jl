@@ -28,6 +28,17 @@ using DE9IM: keywords
         @test keywords(Crosses(3.0; foo=:bar)) == keywords(Crosses(; foo=:bar)) == (; foo=:bar)
         @test keywords(Overlaps(3.0; foo=:bar)) == keywords(Overlaps(; foo=:bar)) == (; foo=:bar)
         @test keywords(Equals(3.0; foo=:bar)) == keywords(Equals(; foo=:bar)) == (; foo=:bar)
+
+        @test keywords(Intersects()) == (;)
+        @test keywords(Disjoint()) == (;)
+        @test keywords(Contains()) == (;)
+        @test keywords(Within()) == (;)
+        @test keywords(Covers()) == (;)
+        @test keywords(CoveredBy()) == (;)
+        @test keywords(Touches()) == (;)
+        @test keywords(Crosses()) == (;)
+        @test keywords(Overlaps()) == (;)
+        @test keywords(Equals()) == (;)
     end
 
     @testset "parent" begin
