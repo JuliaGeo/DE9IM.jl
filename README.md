@@ -1,6 +1,6 @@
 # DE9IM
 
-[![Build Status](https://github.com/rafaqz/DE9IM.jl/actions/workflows/CI.yml/badge.svg?branch=main)](https://github.com/rafaqz/DE9IM.jl/actions/workflows/CI.yml?query=branch%3Amain)
+[![Build Status](https://github.com/JuliaGeo/DE9IM.jl/actions/workflows/CI.yml/badge.svg?branch=main)](https://github.com/rafaqz/DE9IM.jl/actions/workflows/CI.yml?query=branch%3Amain)
 
 This package define wrapper structs for [DE9IM predicates](https://en.wikipedia.org/wiki/DE-9IM)
 
@@ -28,4 +28,10 @@ Package.predicate(::Covers{Nothing}, a, b) = Package.covers(a, b)
 Package.predicate(pred::Covers, a) = Package.covers(a, parent(pred))
 ```
 
-When wrapping predicate arguments is assumed to wrap the _second_ argument of the predicate, rather than the first.
+The predicate is assumed to wrap the _second_ argument, rather than the first.  Similar to `Base.Fix2` in that sense.  Then, e.g. `predicate(Covers(b), a)` means that `a` covers `b`, i.e., that the predicate that the input covers `b` is satisfied by `a`.
+
+The real use case is something like this:
+```julia
+raster[Covers(geom)]
+```
+where that vocabulary makes a lot more sense.
