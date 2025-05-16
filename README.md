@@ -40,7 +40,7 @@ Where the vocabulary makes more sense.
 
 ## Basic Usage
 
-Use as a "singlton" type, filled with `nothing`
+Use as a "singleton" type, filled with `nothing`
 ```julia
 pred = Crosses()
 @assert parent(pred) === nothing
