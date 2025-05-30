@@ -48,7 +48,7 @@ pred = Crosses()
 
 Use as a wrapper type:
 
-```
+```julia
 pred = Crosses(1.0)
 @assert parent(pred) === 1.0
 @assert eltype(pred) == Float64
@@ -63,7 +63,7 @@ pred = Intersects(1.0; manifold=:euclidian)
 ```
 
 This doesn't change the basic behaviour of the object:
-```
+```julia
 @assert parent(pred) === 1.0
 @assert eltype(pred) === Float64
 ```
